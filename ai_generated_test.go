@@ -2,7 +2,7 @@ package savedstructures
 
 /*
 entierly ai generated testing, human reviewed of course but i am stupid :p
-*/
+
 
 import (
 	"encoding/json"
@@ -327,3 +327,4 @@ func TestEncryptedLoadNonexistent(t *testing.T) {
 		t.Errorf("Field1 differs: expected 'default', got '%s'", s.Field1)
 	}
 }
+*/

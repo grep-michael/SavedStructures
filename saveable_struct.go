@@ -11,6 +11,7 @@ type Saveable struct {
 	//do not export any variables here otherwise we could end up with infinite recursion while trying to
 	mu       sync.RWMutex
 	filepath string
+	loader   *JsonLoader
 	data     interface{}
 }
 
@@ -18,20 +19,20 @@ func NewSaveable() *Saveable {
 	return &Saveable{}
 }
 
-func (p *Saveable) InitSaveable(filepath string, data interface{}) {
-	p.filepath = filepath
+func (p *Saveable) InitSaveable(loader *JsonLoader, data interface{}) {
+	p.loader = loader
 	p.data = data
 }
 
 func (p *Saveable) Save() error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-
 	jsonData, err := json.MarshalIndent(p.data, "", "  ")
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(p.filepath, jsonData, 0644)
+	return p.loader.Save(jsonData)
+	//return os.WriteFile(p.filepath, jsonData, 0644)
 }
 
 func (p *Saveable) Load() error {

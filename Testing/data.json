@@ -1,0 +1,25 @@
+{
+  "created": "",
+  "data": [
+    {
+      "data": "Dell OptiPlex 7090",
+      "data2": [
+        "Intel i7-10700",
+        "Changed Manually",
+        "512GB SSD"
+      ]
+    },
+    {
+      "data": "HP EliteBook 840",
+      "data2": [
+        "Intel i5-10310U",
+        "8GB RAM",
+        "256GB SSD",
+        "Windows 10"
+      ]
+    },
+    {
+      "data": "Lenovo ThinkPad T14"
+    }
+  ]
+}
