@@ -35,6 +35,12 @@ func (p *Saveable) Save() error {
 	//return os.WriteFile(p.filepath, jsonData, 0644)
 }
 
+func (p *Saveable) UsePostForUpdate() {
+	p.loader.updateMethod = "POST"
+}
+func (p *Saveable) UsePutForUpdate() {
+	p.loader.updateMethod = "PUT"
+}
 func (p *Saveable) Load() error {
 	p.mu.Lock()
 	defer p.mu.Unlock()

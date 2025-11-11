@@ -40,6 +40,8 @@ func TestRemoteLoading(t *testing.T) {
 		Data: TestData1,
 	}
 	test.InitSaveable(loader, test)
+
+	// Test saving to a remote location
 	err := test.Save()
 	fmt.Println(err)
 
@@ -58,7 +60,21 @@ func TestRemoteLoading(t *testing.T) {
 		t.Errorf("%v\n", err)
 	}
 
+	test.UsePostForUpdate()
+
+	test.Data[0].Data2[1] = "Test Change via post"
+
+	err = test.Save()
+	fmt.Println(err)
+
+	err = testJson("data.0.data2.1", "Test Change via post")
+	if err != nil {
+		t.Errorf("%v\n", err)
+	}
+
+	//test loading from a remote location
 	SetJSONValue("Testing/data.json", "data.0.data2.1", "Changed Manually")
+	test.Load()
 
 }
 
