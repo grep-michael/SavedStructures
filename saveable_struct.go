@@ -2,8 +2,9 @@ package savedstructures
 
 import (
 	"encoding/json"
-	"log"
-	"os"
+	//"log"
+	"fmt"
+	//"os"
 	"sync"
 )
 
@@ -34,6 +35,13 @@ func (p *Saveable) Save() error {
 	return p.loader.Save(jsonData)
 	//return os.WriteFile(p.filepath, jsonData, 0644)
 }
+func (p *Saveable) SetBackupPath(path string) {
+	p.loader.BackupPath = path
+}
+func (p *Saveable) SetBearerHeader(token string) {
+	bearer := fmt.Sprintf("Bearer %s", token)
+	p.loader.Headers.Set("Authorization", bearer)
+}
 
 func (p *Saveable) UsePostForUpdate() {
 	p.loader.updateMethod = "POST"
@@ -45,24 +53,27 @@ func (p *Saveable) Load() error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	file, err := os.ReadFile(p.filepath)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			log.Printf("Failed to read file: %v\n", err)
-			return err
-		}
-
-		// File not found, save defaults
-		jsonData, err := json.MarshalIndent(p.data, "", "  ")
+	err := p.loader.Load(p.data)
+	return err
+	/*
+		file, err := os.ReadFile(p.filepath)
 		if err != nil {
-			return err
-		}
-		if err := os.WriteFile(p.filepath, jsonData, 0644); err != nil {
-			log.Printf("Failed to save file during loading: %v\n", err)
-			return err
-		}
-		return nil // Data already contains defaults
-	}
+			if !os.IsNotExist(err) {
+				log.Printf("Failed to read file: %v\n", err)
+				return err
+			}
 
-	return json.Unmarshal(file, p.data)
+			// File not found, save defaults
+			jsonData, err := json.MarshalIndent(p.data, "", "  ")
+			if err != nil {
+				return err
+			}
+			if err := os.WriteFile(p.filepath, jsonData, 0644); err != nil {
+				log.Printf("Failed to save file during loading: %v\n", err)
+				return err
+			}
+			return nil // Data already contains defaults
+		}
+
+		return json.Unmarshal(file, p.data)*/
 }

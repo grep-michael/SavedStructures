@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 type TestRemoteLoadingStruct struct {
@@ -74,7 +75,57 @@ func TestRemoteLoading(t *testing.T) {
 
 	//test loading from a remote location
 	SetJSONValue("Testing/data.json", "data.0.data2.1", "Changed Manually")
+	time.Sleep(1)
 	test.Load()
+
+	if test.Data[0].Data2[1] != "Changed Manually" {
+		t.Errorf("%v\n", err)
+	}
+}
+func TestRemoteFallBacks(t *testing.T) {
+	loader := NewJsonLoader(REMOTE, "http://127.0.0.1:8000/notrealfile")
+	test := &TestRemoteLoadingStruct{
+		Data: TestData1,
+	}
+	test.InitSaveable(loader, test)
+	test.SetBackupPath("./Testing/fallback.json")
+	// Test saving to a remote location that isnt real
+	err := test.Save()
+	fmt.Println(err)
+	/*
+		err = testJson("data.0.data2.1", "16GB RAM")
+		if err != nil {
+			t.Errorf("%v\n", err)
+		}
+
+		test.Data[0].Data2[1] = "Test Change"
+
+		err = test.Save()
+		fmt.Println(err)
+
+		err = testJson("data.0.data2.1", "Test Change")
+		if err != nil {
+			t.Errorf("%v\n", err)
+		}
+
+		test.UsePostForUpdate()
+
+		test.Data[0].Data2[1] = "Test Change via post"
+
+		err = test.Save()
+		fmt.Println(err)
+
+		err = testJson("data.0.data2.1", "Test Change via post")
+		if err != nil {
+			t.Errorf("%v\n", err)
+		}
+
+		//test loading from a remote location
+		SetJSONValue("Testing/data.json", "data.0.data2.1", "Changed Manually")
+		time.Sleep(1)
+		test.Load()
+		marshaled, err := json.MarshalIndent(test, "", "  ") // Indent with 2 spaces
+		fmt.Println(string(marshaled))*/
 
 }
 
